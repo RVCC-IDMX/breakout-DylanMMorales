@@ -1,57 +1,81 @@
 // collision.js - Handles collision detection and response
 // This file manages all collision-related logic in the game
-
 import { DEFAULTS } from './constants.js';
 
 export class CollisionManager {
   constructor(game) {
     this.game = game;
   }
-  
+
   // Check for all collisions in the game
   checkCollisions() {
     if (!this.game.ball || !this.game.paddle) {
       return;
     }
-    
-    // TODO: Call the methods to check different types of collisions
-    // - Call checkPaddleCollision() to handle ball-paddle collisions
-    // - Call checkBrickCollisions() to handle ball-brick collisions
+    this.checkPaddleCollision();
+    this.checkBrickCollisions();
   }
-  
+
   // Check if ball collides with paddle
   checkPaddleCollision() {
-    // TODO: Implement paddle collision detection and response
-    // 1. Get references to the ball and paddle from the game object
-    // 2. Check if the ball overlaps with the paddle:
-    //    - Ball's bottom edge is below paddle's top edge
-    //    - Ball's bottom edge is above paddle's bottom edge
-    //    - Ball's horizontal position is between paddle's left and right edges
-    // 3. If a collision is detected:
-    //    - Reverse the ball's vertical direction (set dy to negative)
-    //    - Adjust the horizontal direction based on where the ball hit the paddle
-    //      (This creates different bounce angles depending on where the ball hits)
+    const ball = this.game.ball;
+    const paddle = this.game.paddle;
+    if (
+      ball.position.y + ball.size >= paddle.position.y &&
+      ball.position.y <= paddle.position.y + paddle.height &&
+      ball.position.x + ball.size >= paddle.position.x &&
+      ball.position.x <= paddle.position.x + paddle.width
+    ) {
+      ball.dy = -ball.dy;
+    }
   }
-  
+
   // Check if ball collides with any bricks
   checkBrickCollisions() {
-    // TODO: Implement brick collision detection and response
-    // 1. Get reference to the ball from the game object
-    // 2. Loop through all bricks in the game
-    // 3. For each brick that isn't broken:
-    //    - Check if the ball collides with it using ball.collidesWith(brick)
-    //    - If collision detected:
-    //      a. Call brick.break() to break the brick
-    //      b. Add points to the score using game.addScore(DEFAULTS.POINTS_PER_BRICK)
-    //      c. Call calculateBounceDirection() to determine how the ball should bounce
+    const ball = this.game.ball;
+
+    this.game.bricks.forEach((brick) => {
+      if (!brick.broken) {
+        if (this.collidesWith(ball, brick)) {
+          brick.break();
+          this.game.addScore(DEFAULTS.POINTS_PER_BRICK);
+          this.calculateBounceDirection(ball, brick);
+        }
+      }
+    });
   }
-  
+
   // Calculate how the ball should bounce after hitting a brick
   calculateBounceDirection(ball, brick) {
-    // TODO: Determine how the ball should bounce off a brick
-    // 1. Calculate the distances from the ball's center to each edge of the brick
-    // 2. Find the shortest distance to determine which side was hit
-    // 3. If the ball hit the left or right side of the brick, reverse ball.dx
-    // 4. If the ball hit the top or bottom of the brick, reverse ball.dy
+    const ballCenterX = ball.position.x + ball.size / 2;
+    const ballCenterY = ball.position.y + ball.size / 2;
+
+    const brickLeft = brick.position.x;
+    const brickRight = brick.position.x + brick.width;
+    const brickTop = brick.position.y;
+    const brickBottom = brick.position.y + brick.height;
+
+    const distanceLeft = Math.abs(ballCenterX - brickLeft);
+    const distanceRight = Math.abs(ballCenterX - brickRight);
+    const distanceTop = Math.abs(ballCenterY - brickTop);
+    const distanceBottom = Math.abs(ballCenterY - brickBottom);
+
+    const minDistance = Math.min(distanceLeft, distanceRight, distanceTop, distanceBottom);
+
+    if (minDistance === distanceLeft || minDistance === distanceRight) {
+      ball.dx = -ball.dx;
+    } else {
+      ball.dy = -ball.dy;
+    }
+  }
+
+  // Helper method to detect collision between ball and brick
+  collidesWith(ball, brick) {
+    return (
+      ball.position.x < brick.position.x + brick.width &&
+      ball.position.x + ball.size > brick.position.x &&
+      ball.position.y < brick.position.y + brick.height &&
+      ball.position.y + ball.size > brick.position.y
+    );
   }
 }

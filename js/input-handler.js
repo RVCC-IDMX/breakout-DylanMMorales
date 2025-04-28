@@ -47,7 +47,7 @@ export class InputHandler {
 
       // Stop paddle when key is released
       if (KEYS.LEFT.includes(e.key) || KEYS.RIGHT.includes(e.key) ||
-          e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
+        e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
         this.paddle.stop();
         this.game.debug(`Key released: ${e.key}`);
       }

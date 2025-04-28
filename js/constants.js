@@ -11,7 +11,7 @@ export const GAME_STATES = Object.freeze({
 // Default settings
 export const DEFAULTS = Object.freeze({
   LIVES: 3,
-  BALL_SPEED: 3,
+  BALL_SPEED: 1,
   PADDLE_SPEED: 8,
   BALL_SIZE: 10,
   PADDLE_WIDTH: 100,

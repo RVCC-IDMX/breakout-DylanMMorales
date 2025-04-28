@@ -44,19 +44,19 @@ export class UI {
     this.winScreen.classList.add('hidden');
 
     // Show the requested screen
-    switch(screenType) {
-    case GAME_STATES.START:
-      this.startScreen.classList.remove('hidden');
-      break;
-    case GAME_STATES.GAMEOVER:
-      this.finalScoreElement.textContent = this.game.score;
-      this.gameOverScreen.classList.remove('hidden');
-      break;
-    case GAME_STATES.WIN:
-      this.winScoreElement.textContent = this.game.score;
-      this.winScreen.classList.remove('hidden');
-      break;
-            // For PLAYING state, all screens remain hidden
+    switch (screenType) {
+      case GAME_STATES.START:
+        this.startScreen.classList.remove('hidden');
+        break;
+      case GAME_STATES.GAMEOVER:
+        this.finalScoreElement.textContent = this.game.score;
+        this.gameOverScreen.classList.remove('hidden');
+        break;
+      case GAME_STATES.WIN:
+        this.winScoreElement.textContent = this.game.score;
+        this.winScreen.classList.remove('hidden');
+        break;
+      // For PLAYING state, all screens remain hidden
     }
   }
 
